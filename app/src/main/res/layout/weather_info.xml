@@ -110,17 +110,17 @@
                 android:id="@+id/RTtemperature"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="150dip"
+                android:layout_marginLeft="130dip"
                 android:singleLine="true"
-                android:text="7°C"
+                android:text="11°C"
                 android:textColor="@android:color/white"
-                android:textSize="50.0sp" />
+                android:textSize="40.0sp" />
           <TextView
                 android:id="@+id/buchong"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/RTtemperature"
-                android:layout_marginLeft="150dip"
+                android:layout_marginLeft="135dip"
                 android:singleLine="true"
                 android:text="当前温度"
                 android:textColor="@android:color/white"
@@ -230,7 +230,7 @@
            android:layout_marginLeft="5dip"
            android:layout_toRightOf="@id/weather_img"
            android:singleLine="true"
-           android:text="-2°C~7°C"
+           android:text="10°C~20°C"
            android:textColor="@android:color/white"
            android:textSize="30.0sp" />
            <!-- 天气状况 -->
