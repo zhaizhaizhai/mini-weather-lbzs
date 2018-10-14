@@ -105,26 +105,7 @@
               android:textColor="@android:color/white"
               android:textSize="15.0sp" />
           <!--当前温度-->
-
-          <TextView
-                android:id="@+id/RTtemperature"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="130dip"
-                android:singleLine="true"
-                android:text="11°C"
-                android:textColor="@android:color/white"
-                android:textSize="40.0sp" />
-          <TextView
-                android:id="@+id/buchong"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/RTtemperature"
-                android:layout_marginLeft="135dip"
-                android:singleLine="true"
-                android:text="当前温度"
-                android:textColor="@android:color/white"
-                android:textSize="20.0sp" />
+            
 
         <!-- PM2.5整体信息块 -->
         <LinearLayout
