@@ -105,7 +105,7 @@
               android:textColor="@android:color/white"
               android:textSize="15.0sp" />
           <!--当前温度-->
-            
+
 
         <!-- PM2.5整体信息块 -->
         <LinearLayout
