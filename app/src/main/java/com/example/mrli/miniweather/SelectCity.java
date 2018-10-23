@@ -18,6 +18,7 @@ public class SelectCity extends Activity implements View.OnClickListener{
         mBackBtn = (ImageView) findViewById(R.id.title_back);
         mBackBtn.setOnClickListener(this);
     }
+    
     @Override
     public void onClick(View v) {
         switch (v.getId()){

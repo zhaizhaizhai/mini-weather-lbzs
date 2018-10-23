@@ -276,7 +276,7 @@ public class MainActivity extends Activity implements View.OnClickListener{
         }
     }
     protected void onActivityResult(int requestCode, int resultCode, Intent data){
-        if (requestCode == 1 && requestCode== RESULT_OK){
+        if (requestCode == 1 && resultCode== RESULT_OK){
             String newCityCode = data.getStringExtra("cityCode");
             Log.d("myWeather", "选择的城市代码为"+newCityCode);
 

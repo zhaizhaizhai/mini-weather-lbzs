@@ -29,5 +29,5 @@
             android:layout_toRightOf="@id/title_back"
             android:background="#A71717"
             android:gravity="center" />
-    </RelativeLayout>
+        </RelativeLayout>
 </RelativeLayout>
