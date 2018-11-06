@@ -19,7 +19,7 @@ android {
             abi {
                 enable true
                 reset()
-                include 'x86', 'armeabi-v7a','x86_64'
+                include 'x86', 'armeabi-v7a', 'x86_64'
                 universalApk true
             }
         }
@@ -32,4 +32,8 @@ android {
         androidTestImplementation 'com.android.support.test:runner:1.0.1'
         androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
     }
+}
+
+dependencies {
+    implementation 'com.android.support.constraint:constraint-layout:+'
 }

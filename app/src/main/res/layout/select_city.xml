@@ -3,11 +3,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+
     <RelativeLayout
         android:layout_width="fill_parent"
         android:layout_height="45.0dip"
-        android:textColor="#ffffffff"
-        android:background="#ffcd2626" >
+        android:background="#ffcd2626"
+        android:textColor="#ffffffff">
 
         <TextView
             android:id="@+id/title_name"
@@ -17,13 +18,15 @@
             android:text="当前城市:北京"
             android:textColor="#ffffffff"
             android:textSize="20.0dip" />
+
         <ImageView
             android:id="@+id/title_back"
             android:layout_width="45.0dip"
             android:layout_height="45.0dip"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
-            android:src="@drawable/base_action_bar_back_normal"/>
+            android:src="@drawable/base_action_bar_back_normal" />
+
         <ImageView
             android:layout_width="1.0dip"
             android:layout_height="40dip"
@@ -34,10 +37,33 @@
             android:gravity="center" />
     </RelativeLayout>
 
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="55.0dip"
+        android:layout_marginTop="45dip"
+        >
+        <EditText
+            android:id="@+id/search_edit"
+            android:imeOptions="actionSearch"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/contact_search_box_edittext_keyword_background"
+            android:drawableLeft="@drawable/magnifying_glass"
+            android:drawablePadding="10.0dip"
+            android:hint="搜索全国城市（中文）"
+            android:paddingBottom="14.0dip"
+            android:paddingLeft="15.0dip"
+            android:paddingTop="15.0dip"
+            android:singleLine="true"
+            android:textColor="#ff000000"
+            android:textColorHint="#ffcccccc" />
+
+    </RelativeLayout>
+
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="45.0dip"
+        android:layout_marginTop="100.0dip"
         android:layout_alignParentBottom="true">
 
         <ListView
@@ -50,6 +76,7 @@
 
         </ListView>
     </LinearLayout>
+
 
 
 </RelativeLayout>
