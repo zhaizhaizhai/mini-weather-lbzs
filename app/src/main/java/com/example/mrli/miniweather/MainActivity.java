@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -35,6 +37,8 @@ public class MainActivity extends Activity implements View.OnClickListener{
     private static final int UPDATE_TODAY_WEATHER =1;
     private ImageView mUpdateBtn;
     private ImageView mCitySelect;
+    private ImageView mTitleShare;
+    private ProgressBar mUpdateProgress;
     private TextView cityTv, timeTv, humidityTv, weekTv, pmDataTv, pmQualityTv,
             temperatureTv, climateTv, windTv, city_name_Tv;
     private ImageView weatherImg, pmImg;
@@ -105,6 +109,31 @@ public class MainActivity extends Activity implements View.OnClickListener{
             climateTv.setText(todayWeather.getType());
             windTv.setText("风力:"+todayWeather.getFengli());
             Toast.makeText(MainActivity.this,"更新成功!",Toast.LENGTH_SHORT).show();
+
+            SharedPreferences settings
+                    =(SharedPreferences)getSharedPreferences("config",MODE_PRIVATE);
+            SharedPreferences.Editor editor = settings.edit();
+            editor.putString("city",todayWeather.getCity());
+        editor.putString("updatetime",todayWeather.getUpdatetime());
+        editor.putString("wendu",todayWeather.getWendu());
+        editor.putString("shidu",todayWeather.getShidu());
+        editor.putString("pm25",todayWeather.getPm25());
+        editor.putString("quality",todayWeather.getQuality());
+        editor.putString("fengxiang",todayWeather.getFengxiang());
+        editor.putString("fengli",todayWeather.getFengli());
+        editor.putString("date",todayWeather.getDate());
+        editor.putString("high",todayWeather.getHigh());
+        editor.putString("low",todayWeather.getLow());
+        editor.putString("type",todayWeather.getType());
+        editor.commit();
+
+            try{
+                Thread.sleep(1000);
+            }catch (Exception e){
+
+            }
+
+            setUpdateBtn();
     }
     private TodayWeather parseXML(String xmldata){
         TodayWeather todayWeather = null;
@@ -204,6 +233,38 @@ public class MainActivity extends Activity implements View.OnClickListener{
         return todayWeather;
     }
 
+    /**
+     * 隐藏更新按钮
+     * 显示更新转动动画
+     */
+    void setUpdateProgress(){
+        mUpdateBtn=(ImageView) findViewById(R.id.title_update_btn);
+        mUpdateProgress=(ProgressBar)findViewById(R.id.title_update_progress);
+        mTitleShare=(ImageView)findViewById(R.id.title_share);
+        mUpdateBtn.setVisibility(View.GONE);
+        RelativeLayout.LayoutParams params=(RelativeLayout.LayoutParams)mTitleShare.getLayoutParams();
+        params.addRule(RelativeLayout.LEFT_OF, R.id.title_update_progress);
+        mTitleShare.setLayoutParams(params);
+        mUpdateProgress.setVisibility(View.VISIBLE);
+    }
+
+    /**
+     * 显示更新按钮
+     * 隐藏转动动画
+     */
+    void setUpdateBtn(){
+        mUpdateBtn=(ImageView) findViewById(R.id.title_update_btn);
+        mUpdateProgress=(ProgressBar)findViewById(R.id.title_update_progress);
+        mUpdateBtn.setVisibility(View.VISIBLE);
+        mTitleShare=(ImageView)findViewById(R.id.title_share);
+
+        RelativeLayout.LayoutParams params=(RelativeLayout.LayoutParams)mTitleShare.getLayoutParams() ;
+        params.addRule(RelativeLayout.LEFT_OF,R.id.title_update_btn);
+        mTitleShare.setLayoutParams(params);
+
+        mUpdateProgress.setVisibility(View.GONE);
+    }
+
 
     /**
      * @param cityCode
@@ -260,6 +321,7 @@ public class MainActivity extends Activity implements View.OnClickListener{
             startActivityForResult(i,1);
         }
         if (view.getId() == R.id.title_update_btn){
+            setUpdateProgress();
             SharedPreferences sharedPreferences = getSharedPreferences("config", MODE_PRIVATE);
             String cityCode = sharedPreferences.getString("main_ city_code","101010100");
             Log.d("myWeather",cityCode);
