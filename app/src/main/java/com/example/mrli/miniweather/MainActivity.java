@@ -3,6 +3,7 @@ package com.example.mrli.miniweather;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -24,6 +25,9 @@ import android.widget.TextView;
 import android.os.Handler;
 import android.os.Message;
 
+import com.baidu.location.LocationClient;
+import com.baidu.location.LocationClientOption;
+
 import zhaizhaizhai.bean.TodayWeather;
 import zhaizhaizhai.util.NetUtil;
 
@@ -39,6 +43,10 @@ public class MainActivity extends Activity implements View.OnClickListener{
     private ImageView mCitySelect;
     private ImageView mTitleShare;
     private ProgressBar mUpdateProgress;
+    private LocationManager locationManager;
+    private ImageView mTitleLocation;
+    public LocationClient mLocationClient=null;
+    private MyLocationListerner myListerner = new MyLocationListerner();
     private TextView cityTv, timeTv, humidityTv, weekTv, pmDataTv, pmQualityTv,
             temperatureTv, climateTv, windTv, city_name_Tv;
     private ImageView weatherImg, pmImg;
@@ -71,6 +79,25 @@ public class MainActivity extends Activity implements View.OnClickListener{
         mCitySelect = (ImageView) findViewById(R.id.title_city_manager);
         mCitySelect.setOnClickListener(this);
         initView();
+        mLocationClient=new LocationClient(getApplicationContext());
+        mLocationClient.registerLocationListener(myListerner);
+        initLocation();
+
+    }
+    private void initLocation(){
+        LocationClientOption option = new LocationClientOption();
+        option.setLocationMode(LocationClientOption.LocationMode.Hight_Accuracy);
+        option.setCoorType("bd09ll");
+        int span = 100;
+        option.setScanSpan(0);
+        option.setIsNeedAddress(true);
+        option.setOpenGps(true);
+        option.setLocationNotify(true);
+        option.setIsNeedLocationDescribe(true);
+        option.setIsNeedLocationPoiList(true);
+        option.setIgnoreKillProcess(false);
+        option.setEnableSimulateGps(false);
+        mLocationClient.setLocOption(option);
     }
     void initView() {
         city_name_Tv = findViewById(R.id.title_city_name);
@@ -98,6 +125,9 @@ public class MainActivity extends Activity implements View.OnClickListener{
         windTv.setText("N/A");
     }
     void updateTodayWeather(TodayWeather todayWeather){
+            if(mUpdateBtn.getVisibility()==View.GONE&&mUpdateProgress.getVisibility()==View.VISIBLE){
+                setUpdateBtn();
+            }
             city_name_Tv.setText(todayWeather.getCity()+"天气");
             cityTv.setText(todayWeather.getCity());
             timeTv.setText(todayWeather.getUpdatetime()+ "发布");
@@ -110,30 +140,8 @@ public class MainActivity extends Activity implements View.OnClickListener{
             windTv.setText("风力:"+todayWeather.getFengli());
             Toast.makeText(MainActivity.this,"更新成功!",Toast.LENGTH_SHORT).show();
 
-            SharedPreferences settings
-                    =(SharedPreferences)getSharedPreferences("config",MODE_PRIVATE);
-            SharedPreferences.Editor editor = settings.edit();
-            editor.putString("city",todayWeather.getCity());
-        editor.putString("updatetime",todayWeather.getUpdatetime());
-        editor.putString("wendu",todayWeather.getWendu());
-        editor.putString("shidu",todayWeather.getShidu());
-        editor.putString("pm25",todayWeather.getPm25());
-        editor.putString("quality",todayWeather.getQuality());
-        editor.putString("fengxiang",todayWeather.getFengxiang());
-        editor.putString("fengli",todayWeather.getFengli());
-        editor.putString("date",todayWeather.getDate());
-        editor.putString("high",todayWeather.getHigh());
-        editor.putString("low",todayWeather.getLow());
-        editor.putString("type",todayWeather.getType());
-        editor.commit();
 
-            try{
-                Thread.sleep(1000);
-            }catch (Exception e){
 
-            }
-
-            setUpdateBtn();
     }
     private TodayWeather parseXML(String xmldata){
         TodayWeather todayWeather = null;
@@ -332,9 +340,53 @@ public class MainActivity extends Activity implements View.OnClickListener{
             else{
                 Log.d("myWeather", "网络挂了");
                 Toast.makeText(MainActivity.this,"网络挂了!",Toast.LENGTH_LONG).show();
-
             }
 
+        }
+        if (view.getId()==R.id.title_location){
+            setUpdateProgress();
+            if (mLocationClient.isStarted()){
+                mLocationClient.stop();
+            }
+            mLocationClient.start();
+
+            final Handler BDHandler=new Handler(){
+                public void handleMessage(Message msg){
+                    switch (msg.what){
+                        case 5:
+                            if (msg.obj !=null){
+                                if (NetUtil.getNetworkState(MainActivity.this)!=NetUtil.NETWORN_NONE){
+                                    Log.d("myWeather","网络ok");
+                                    queryWeatherCode(myListerner.cityCode);
+                                } else {
+                                    Log.d("myWeather","网络挂了");
+                                    Toast.makeText(MainActivity.this,"网络挂了！",Toast.LENGTH_LONG).show();
+                                }
+                            }
+                            myListerner.cityCode=null;
+                            break;
+                        default:
+                                break;
+                    }
+                }
+            };
+
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try{
+                        while (myListerner.cityCode==null){
+                            Thread.sleep(2000);
+                        }
+                        Message msg=new Message();
+                        msg.what=5;
+                        msg.obj=myListerner.cityCode;
+                        BDHandler.sendMessage(msg);
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
+                }
+            }).start();
         }
     }
     protected void onActivityResult(int requestCode, int resultCode, Intent data){
@@ -352,4 +404,6 @@ public class MainActivity extends Activity implements View.OnClickListener{
             }
         }
     }
+
+
 }
